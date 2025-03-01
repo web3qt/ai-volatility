@@ -9,7 +9,7 @@ import os
 import json
 import pandas as pd
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Dict, List, Any, Optional
 
 # LangChain imports
@@ -392,11 +392,6 @@ class VolatilityAgent:
         plt.savefig(volatility_chart)
         plt.close()
 
-        # 绘制预测图
-        import matplotlib.pyplot as plt
-        import pandas as pd
-        from datetime import timedelta
-
         # 创建预测日期
         last_date = self.volatility.index[-1]
         forecast_dates = [last_date + timedelta(days=i + 1) for i in range(horizon)]
@@ -511,7 +506,7 @@ class VolatilityAgent:
 
             # 计算收益率和波动率
             returns = self.volatility_model.calculate_returns(price_data)
-            result = self.volatility_chain({"returns": returns})
+            result = self.volatility_chain({"returns": returns, "horizon": 1})  # 添加默认的horizon参数
             if "error" in result:
                 invalid_tokens.append(token_symbol)
                 continue

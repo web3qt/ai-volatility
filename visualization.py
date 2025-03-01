@@ -26,7 +26,8 @@ class VolatilityVisualizer:
             style (str): seaborn绘图风格，默认为'darkgrid'
         """
         sns.set_style(style)
-        plt.rcParams['font.sans-serif'] = ['SimHei']  # 用来正常显示中文标签
+        # 设置中文字体，按优先级尝试不同字体
+        plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'PingFang SC', 'Heiti SC', 'Arial Unicode MS', 'DejaVu Sans']  # 用来正常显示中文标签
         plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
         
     def plot_price_history(self, price_data, token_symbol, figsize=(12, 6)):
@@ -84,6 +85,24 @@ class VolatilityVisualizer:
         
         plt.tight_layout()
         return fig
+    
+    def plot_volatility(self, volatility_series, token_symbol, figsize=(12, 6)):
+        """
+        绘制波动率图
+        
+        Args:
+            volatility_series (pandas.Series): 波动率序列
+            token_symbol (str): 代币符号
+            figsize (tuple): 图形大小
+        """
+        plt.figure(figsize=figsize)
+        plt.plot(volatility_series.index, volatility_series * 100, linewidth=2, color='orange')
+        plt.title(f'{token_symbol}波动率', fontsize=15)
+        plt.xlabel('日期', fontsize=12)
+        plt.ylabel('波动率 (%)', fontsize=12)
+        plt.grid(True, alpha=0.3)
+        plt.tight_layout()
+        return plt
     
     def plot_returns(self, returns, token_symbol, figsize=(12, 6)):
         """
