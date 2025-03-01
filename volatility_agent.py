@@ -26,6 +26,7 @@ from data_fetcher import DataFetcher
 from volatility_model import VolatilityModel
 from visualization import VolatilityVisualizer
 from market_analysis import MarketAnalyzer
+from pdf_exporter import PDFExporter
 
 
 class Message:
@@ -138,6 +139,7 @@ class VolatilityAgent:
         self.volatility_model = VolatilityModel(lambda_param=lambda_param)
         self.visualizer = VolatilityVisualizer()
         self.market_analyzer = MarketAnalyzer()
+        self.pdf_exporter = PDFExporter()
 
         # 创建波动率分析链
         self.volatility_chain = VolatilityChain(self.volatility_model)
@@ -342,6 +344,15 @@ class VolatilityAgent:
         response = Response(result_text)
         response.metadata["charts"] = [price_chart, returns_chart, volatility_chart]
 
+        # 导出PDF报告
+        pdf_path = self.pdf_exporter.export_analysis_to_pdf(
+            token_symbol,
+            result_text,
+            [price_chart, returns_chart, volatility_chart],
+            {"analysis_type": "market_analysis", "days": days}
+        )
+        response.metadata["pdf_report"] = pdf_path
+
         # 记住这次分析
         self.remember(Message(content), response)
 
@@ -468,6 +479,15 @@ class VolatilityAgent:
 
         response = Response(result_text)
         response.metadata["charts"] = [price_chart, volatility_chart, forecast_chart]
+
+        # 导出PDF报告
+        pdf_path = self.pdf_exporter.export_analysis_to_pdf(
+            token_symbol,
+            result_text,
+            [price_chart, volatility_chart, forecast_chart],
+            {"analysis_type": "volatility_prediction", "days": days, "horizon": horizon}
+        )
+        response.metadata["pdf_report"] = pdf_path
 
         # 记住这次预测
         self.remember(Message(content), response)
@@ -679,16 +699,59 @@ class VolatilityAgent:
 
 - **当前波动率**: {current_volatility:.2f}%
 - **平均波动率**: {avg_volatility:.2f}%
-- **风险等级**: {risk_level}
-- **风险描述**: {risk_description}
-- **趋势分析**: {trend_description}
-- **交易建议**: {trading_advice}
+- **波动率趋势**: {"上升" if volatility_trend > 1.1 else "下降" if volatility_trend < 0.9 else "稳定"}
+
+### 风险等级: {risk_level}
+
+{risk_description}
+
+### 趋势分析
+
+{trend_description}
+
+### 交易建议
+
+{trading_advice}
 """
 
-        response = Response(result_text)
+        # 生成风险热力图
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        risk_chart = f"{self.output_dir}/{self.current_token}_risk_{timestamp}.png"
 
-        # 记住这次风险评估
-        self.remember(Message(f"risk {self.current_token}"), response)
+        # 创建风险仪表盘图
+        plt.figure(figsize=(10, 6))
+        plt.barh(["风险等级"], [current_volatility], color="orange")
+        plt.xlim(0, 20)  # 设置x轴范围
+        plt.axvline(x=2.5, color="green", linestyle="--")
+        plt.axvline(x=5.0, color="yellowgreen", linestyle="--")
+        plt.axvline(x=7.5, color="yellow", linestyle="--")
+        plt.axvline(x=10.0, color="orange", linestyle="--")
+        plt.axvline(x=15.0, color="red", linestyle="--")
+
+        # 添加风险区域标签
+        plt.text(1.25, 1.1, "极低", ha="center")
+        plt.text(3.75, 1.1, "低", ha="center")
+        plt.text(6.25, 1.1, "中等", ha="center")
+        plt.text(8.75, 1.1, "中高", ha="center")
+        plt.text(12.5, 1.1, "高", ha="center")
+        plt.text(17.5, 1.1, "极高", ha="center")
+
+        plt.title(f"{self.current_token} 风险仪表盘", fontsize=15)
+        plt.tight_layout()
+        plt.savefig(risk_chart)
+        plt.close()
+
+        response = Response(result_text)
+        response.metadata["chart"] = risk_chart
+
+        # 导出PDF报告
+        pdf_path = self.pdf_exporter.export_analysis_to_pdf(
+            self.current_token,
+            result_text,
+            [risk_chart],
+            {"analysis_type": "risk_assessment", "risk_level": risk_level}
+        )
+        response.metadata["pdf_report"] = pdf_path
 
         return response
 
