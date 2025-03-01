@@ -22,11 +22,11 @@ from langchain.pydantic_v1 import BaseModel, Field
 
 # 项目组件导入
 import matplotlib.pyplot as plt
-from data_fetcher import DataFetcher
-from volatility_model import VolatilityModel
-from visualization import VolatilityVisualizer
-from market_analysis import MarketAnalyzer
-from pdf_exporter import PDFExporter
+from src.services.data_fetcher import DataFetcher
+from src.models.volatility_model import VolatilityModel
+from src.services.visualization import VolatilityVisualizer
+from src.services.market_analysis import MarketAnalyzer
+from src.utils.pdf_exporter import PDFExporter
 
 
 class Message:

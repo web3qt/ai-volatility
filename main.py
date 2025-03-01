@@ -7,7 +7,7 @@
 
 import argparse
 import sys
-from volatility_agent import Message, VolatilityAgent
+from src.volatility_agent import Message, VolatilityAgent
 
 
 def parse_arguments():
