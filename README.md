@@ -1,173 +1,172 @@
-# 加密货币波动率预测智能体
+# Cryptocurrency Volatility Prediction Agent
 
-## 项目介绍
+## Project Introduction
 
-这是一个基于EWMA（指数加权移动平均）模型的加密货币波动率预测智能体。该智能体能够实时分析和预测加密货币价格波动率，为投资决策提供数据支持。通过整合历史价格数据、波动率计算和风险评估，帮助用户更好地理解和预测加密货币市场波动性。
+This is a cryptocurrency volatility prediction agent based on the EWMA (Exponentially Weighted Moving Average) model. The agent can analyze and predict cryptocurrency price volatility in real-time, providing data support for investment decisions. By integrating historical price data, volatility calculations, and risk assessments, it helps users better understand and predict cryptocurrency market volatility.
 
-## 核心功能
+## Core Features
 
-- **波动率分析**：基于EWMA模型计算历史波动率，支持自定义时间窗口
-- **波动率预测**：使用统计模型预测未来波动率趋势
-- **多币种比较**：支持多种加密货币的波动率对比分析
-- **风险评估**：提供详细的风险评估报告和交易建议
-- **可视化展示**：生成直观的波动率趋势图和对比图表
-- **实时数据**：自动获取最新的加密货币市场数据
-- **PDF报告导出**：支持将分析结果导出为PDF格式报告
-- **DeepSeek集成**：利用DeepSeek大模型提供智能市场分析
+- **Volatility Analysis**: Calculate historical volatility based on the EWMA model, supporting customizable time windows
+- **Volatility Prediction**: Use statistical models to predict future volatility trends
+- **Multi-Currency Comparison**: Support comparative volatility analysis of multiple cryptocurrencies
+- **Risk Assessment**: Provide detailed risk assessment reports and trading recommendations
+- **Visualization**: Generate intuitive volatility trend charts and comparison graphs
+- **Real-time Data**: Automatically fetch the latest cryptocurrency market data
+- **PDF Report Export**: Support exporting analysis results as PDF format reports
+- **DeepSeek Integration**: Utilize the DeepSeek large model to provide intelligent market analysis
 
-## 技术特点
+## Technical Features
 
-- 使用EWMA模型进行波动率建模，符合RiskMetrics标准
-- 支持自定义衰减因子(λ)，默认值0.94符合金融行业标准
-- 提供完整的数据分析链，从数据获取到结果可视化
-- 集成DeepSeek大模型API，提供智能化市场分析和预测
-- 基于Python实现，具有良好的可扩展性
-- 使用LangChain框架实现AI分析流程
-- 支持多种可视化图表和PDF报告导出
+- Use EWMA model for volatility modeling, compliant with RiskMetrics standards
+- Support customizable decay factor (λ), with a default value of 0.94 conforming to financial industry standards
+- Provide a complete data analysis chain, from data acquisition to result visualization
+- Integrate DeepSeek large model API, providing intelligent market analysis and prediction
+- Implemented in Python, with good scalability
+- Use LangChain framework to implement AI analysis processes
+- Support various visualization charts and PDF report export
 
-## 安装指南
+## Installation Guide
 
-### 环境要求
+### Requirements
 
-- Python 3.7或更高版本
-- 网络连接（用于获取市场数据和调用DeepSeek API）
+- Python 3.7 or higher
 
-### 安装步骤
+### Installation Steps
 
-1. 克隆项目代码库
+1. Clone the repository
 
 ```bash
 git clone https://github.com/yourusername/ai-volatility.git
 cd ai-volatility
 ```
 
-2. 安装依赖包
+2. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-3. 配置环境变量（可选，用于DeepSeek API集成）
+3. Configure environment variables (optional, for DeepSeek API integration)
 
-创建`.env`文件并添加以下内容：
+Create a `.env` file and add the following content:
 
 ```
 DEEPSEEK_API_KEY=your_api_key_here
 ```
 
-## 使用方法
+## Usage
 
-### 基本用法
+### Basic Usage
 
 ```bash
 python main.py --token BTC --days 30 --command analyze
 ```
 
-### 常用命令
+### Common Commands
 
-1. 分析特定加密货币的波动率
+1. Analyze the volatility of a specific cryptocurrency
 
 ```bash
 python main.py --token ETH --days 30 --command analyze
 ```
 
-2. 预测未来波动率
+2. Predict future volatility
 
 ```bash
 python main.py --token BTC --days 30 --command predict --horizon 7
 ```
 
-3. 比较多种加密货币的波动率
+3. Compare volatility of multiple cryptocurrencies
 
 ```bash
 python main.py --token BTC --compare-tokens BTC,ETH --days 30 --command compare
 ```
 
-4. 进行风险评估
+4. Conduct risk assessment
 
 ```bash
 python main.py --token BTC --days 30 --command risk
 ```
 
-## 参数说明
+## Parameter Description
 
-- `--token`: 加密货币代码（如BTC、ETH）
-- `--days`: 历史数据天数，默认30天
-- `--lambda`: EWMA模型衰减因子，默认0.94
-- `--horizon`: 预测时间跨度（天数），默认7天
-- `--command`: 执行命令（analyze/predict/compare/risk）
-- `--compare-tokens`: 要比较的代币列表，用逗号分隔（仅用于compare命令）
+- `--token`: Cryptocurrency code (e.g., BTC, ETH)
+- `--days`: Number of days of historical data, default is 30 days
+- `--lambda`: EWMA model decay factor, default is 0.94
+- `--horizon`: Prediction time span (days), default is 7 days
+- `--command`: Execution command (analyze/predict/compare/risk)
+- `--compare-tokens`: List of tokens to compare, separated by commas (only for compare command)
 
-## 项目结构
+## Project Structure
 
 ```
-├── main.py           # 主程序入口
-├── requirements.txt  # 项目依赖
-├── src/              # 源代码目录
-│   ├── __init__.py   # 包初始化文件
-│   ├── volatility_agent.py # 波动率预测智能体核心实现
-│   ├── models/       # 模型目录
+├── main.py           # Main program entry
+├── requirements.txt  # Project dependencies
+├── src/              # Source code directory
+│   ├── __init__.py   # Package initialization file
+│   ├── volatility_agent.py # Core implementation of volatility prediction agent
+│   ├── models/       # Models directory
 │   │   ├── __init__.py
-│   │   └── volatility_model.py # EWMA模型实现
-│   ├── services/     # 服务目录
+│   │   └── volatility_model.py # EWMA model implementation
+│   ├── services/     # Services directory
 │   │   ├── __init__.py
-│   │   ├── data_fetcher.py   # 数据获取模块
-│   │   ├── market_analysis.py # 市场分析模块
-│   │   └── visualization.py  # 数据可视化模块
-│   └── utils/        # 工具目录
+│   │   ├── data_fetcher.py   # Data fetching module
+│   │   ├── market_analysis.py # Market analysis module
+│   │   └── visualization.py  # Data visualization module
+│   └── utils/        # Utilities directory
 │       ├── __init__.py
-│       └── pdf_exporter.py   # PDF报告导出模块
-├── tests/            # 测试目录
-│   └── test_pdf.py   # PDF导出测试
-├── data/             # 数据存储目录
-├── docs/             # 文档目录
-└── output/           # 输出目录（分析结果和报告）
+│       └── pdf_exporter.py   # PDF report export module
+├── tests/            # Tests directory
+│   └── test_pdf.py   # PDF export test
+├── data/             # Data storage directory
+├── docs/             # Documentation directory
+└── output/           # Output directory (analysis results and reports)
 ```
 
-## 输出示例
+## Output Examples
 
-### 波动率分析输出
-
-```
-正在分析 BTC 的波动率...
-
-分析结果：
-- 分析周期：2023-01-01 至 2023-01-30 (30天)
-- 平均波动率：2.34%
-- 最大波动率：4.56% (2023-01-15)
-- 最小波动率：1.23% (2023-01-05)
-- 当前波动率：2.78%
-
-波动率趋势图已保存至：output/BTC_volatility_trend.png
-```
-
-### 风险评估输出
+### Volatility Analysis Output
 
 ```
-风险评估报告 - BTC
+Analyzing BTC volatility...
 
-- 95%置信区间下的日VaR：3.45%
-- 预期最大损失(ES)：4.12%
-- 波动率趋势：上升
-- 风险等级：中高风险
+Analysis Results:
+- Analysis Period: 2023-01-01 to 2023-01-30 (30 days)
+- Average Volatility: 2.34%
+- Maximum Volatility: 4.56% (2023-01-15)
+- Minimum Volatility: 1.23% (2023-01-05)
+- Current Volatility: 2.78%
 
-建议：短期内保持谨慎，考虑降低仓位或设置止损。
+Volatility trend chart has been saved to: output/BTC_volatility_trend.png
 ```
 
-## 注意事项
+### Risk Assessment Output
 
-1. 确保网络连接正常，以便获取最新市场数据
-2. 推荐使用Python 3.7或更高版本
-3. 首次运行时会自动创建输出目录
-4. 大数据量分析可能需要较长处理时间
-5. DeepSeek API功能需要有效的API密钥
+```
+Risk Assessment Report - BTC
 
-## 开发计划
+- Daily VaR at 95% confidence interval: 3.45%
+- Expected Shortfall (ES): 4.12%
+- Volatility Trend: Increasing
+- Risk Level: Medium-High Risk
 
-- [ ] 添加更多预测模型支持
-- [ ] 优化数据获取效率
-- [ ] 添加Web界面支持
-- [ ] 增加更多风险指标
-- [ ] 支持自定义数据源
-- [ ] 增强DeepSeek模型集成能力
-- [ ] 添加回测功能
+Recommendation: Maintain caution in the short term, consider reducing position or setting stop-loss.
+```
+
+## Notes
+
+1. Ensure network connection is normal to fetch the latest market data
+2. Python 3.7 or higher is recommended
+3. Output directories will be created automatically on first run
+4. Large data volume analysis may require longer processing time
+5. DeepSeek API functionality requires a valid API key
+
+## Development Plan
+
+- [ ] Add support for more prediction models
+- [ ] Optimize data acquisition efficiency
+- [ ] Add Web interface support
+- [ ] Increase more risk indicators
+- [ ] Support custom data sources
+- [ ] Enhance DeepSeek model integration capabilities
+- [ ] Add backtesting functionality
