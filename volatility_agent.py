@@ -25,6 +25,7 @@ import matplotlib.pyplot as plt
 from data_fetcher import DataFetcher
 from volatility_model import VolatilityModel
 from visualization import VolatilityVisualizer
+from market_analysis import MarketAnalyzer
 
 
 class Message:
@@ -136,6 +137,7 @@ class VolatilityAgent:
         self.data_fetcher = DataFetcher()
         self.volatility_model = VolatilityModel(lambda_param=lambda_param)
         self.visualizer = VolatilityVisualizer()
+        self.market_analyzer = MarketAnalyzer()
 
         # 创建波动率分析链
         self.volatility_chain = VolatilityChain(self.volatility_model)
@@ -301,16 +303,37 @@ class VolatilityAgent:
         max_volatility = self.volatility.max() * 100
         min_volatility = self.volatility.min() * 100
 
-        result_text = f"""
-## {token_symbol} 波动率分析结果
+        # 获取其他主要加密货币的数据作为比较
+        comparison_tokens = ['BTC', 'ETH'] if token_symbol not in ['BTC', 'ETH'] else ['ETH', 'BNB']
+        comparison_assets = {}
+        for comp_token in comparison_tokens:
+            comp_data = self.data_fetcher.get_historical_prices(comp_token, days=days)
+            if comp_data is not None:
+                comparison_assets[comp_token] = comp_data['price']
 
+        # 生成综合市场分析报告
+        market_analysis = self.market_analyzer.generate_market_analysis(
+            token_symbol,
+            self.price_data,
+            self.volatility,
+            comparison_assets
+        )
+
+        result_text = f"""
+## {token_symbol} 综合市场分析报告
+
+### 基础波动率指标
 - **分析周期**: 过去 {days} 天
 - **当前波动率**: {current_volatility:.2f}%
 - **平均波动率**: {avg_volatility:.2f}%
 - **最大波动率**: {max_volatility:.2f}%
 - **最小波动率**: {min_volatility:.2f}%
 
-波动率趋势图已保存至：
+### 深度市场分析
+{market_analysis}
+
+### 可视化图表
+以下图表已保存：
 - {price_chart}
 - {returns_chart}
 - {volatility_chart}
