@@ -85,6 +85,31 @@ class VolatilityVisualizer:
         plt.tight_layout()
         return fig
     
+    def plot_returns(self, returns, token_symbol, figsize=(12, 6)):
+        """
+        绘制收益率时间序列图
+        
+        Args:
+            returns (pandas.Series): 收益率序列
+            token_symbol (str): 代币符号
+            figsize (tuple): 图形大小
+        """
+        fig, ax = plt.subplots(figsize=figsize)
+        
+        ax.plot(returns.index, returns, linewidth=1, color='blue')
+        ax.set_title(f'{token_symbol}收益率时间序列', fontsize=15)
+        ax.set_xlabel('日期', fontsize=12)
+        ax.set_ylabel('收益率', fontsize=12)
+        ax.grid(True, alpha=0.3)
+        
+        # 格式化日期
+        date_format = DateFormatter('%Y-%m-%d')
+        ax.xaxis.set_major_formatter(date_format)
+        fig.autofmt_xdate()
+        
+        plt.tight_layout()
+        return fig
+    
     def plot_returns_distribution(self, returns, token_symbol, figsize=(12, 6)):
         """
         绘制收益率分布图

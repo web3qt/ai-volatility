@@ -51,7 +51,7 @@ class DataFetcher:
             symbol (str): 代币符号，如'BTC'、'ETH'
             
         Returns:
-            str: 代币ID
+            str: 代币ID，如果不支持则返回None
         """
         tokens = self.get_supported_tokens()
         symbol = symbol.upper()
@@ -59,14 +59,15 @@ class DataFetcher:
         if symbol in tokens:
             return tokens[symbol]
         else:
-            raise ValueError(f"不支持的代币: {symbol}。请检查代币符号是否正确。")
+            print(f"不支持的代币: {symbol}。请检查代币符号是否正确。")
+            return None
     
     def get_historical_prices(self, token, days=30):
         """
         获取指定代币的历史价格数据
         
         Args:
-            token (str): 代币符号，如'BTC'、'ETH'
+            token (str): 代币符号或ID，如'BTC'、'ETH'
             days (int): 获取历史数据的天数，默认30天
             
         Returns:
@@ -74,10 +75,16 @@ class DataFetcher:
         """
         try:
             # 获取代币ID
-            token_id = self.get_token_id(token)
+            if token.upper() in self.get_supported_tokens():
+                token_id = self.get_token_id(token)
+            else:
+                token_id = token  # 如果已经是ID，则直接使用
             
+            if token_id is None:
+                return None
+                
             # 从CoinGecko获取市场数据
-            print(f"正在获取{token}的{days}天历史数据...")
+            print(f"正在获取{token_id}的{days}天历史数据...")
             market_data = self.cg.get_coin_market_chart_by_id(
                 id=token_id,
                 vs_currency='usd',
@@ -103,7 +110,7 @@ class DataFetcher:
             df = df.resample('1H').mean()
             df.dropna(inplace=True)
             
-            print(f"成功获取{token}的历史数据，共{len(df)}条记录")
+            print(f"成功获取{token_id}的历史数据，共{len(df)}条记录")
             return df
             
         except Exception as e:

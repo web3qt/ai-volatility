@@ -7,8 +7,7 @@
 
 import argparse
 import sys
-from eliza import Message
-from eliza_agent import VolatilityAgent
+from volatility_agent import Message, VolatilityAgent
 
 
 def parse_arguments():

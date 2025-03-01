@@ -26,6 +26,28 @@ class VolatilityModel:
         """
         self.lambda_param = lambda_param
         
+    def calculate_returns(self, prices):
+        """
+        计算对数收益率
+        
+        Args:
+            prices (pandas.Series or pandas.DataFrame): 价格序列或数据框
+            
+        Returns:
+            pandas.Series: 收益率序列
+        """
+        # 如果输入是DataFrame，则使用price列
+        if isinstance(prices, pd.DataFrame) and 'price' in prices.columns:
+            prices = prices['price']
+            
+        # 计算对数收益率: ln(P_t / P_{t-1})
+        returns = np.log(prices / prices.shift(1))
+        
+        # 删除第一个值（NaN）
+        returns = returns.dropna()
+        
+        return returns
+        
     def calculate_ewma_volatility(self, returns):
         """
         使用EWMA模型计算波动率
