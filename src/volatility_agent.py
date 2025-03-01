@@ -460,6 +460,14 @@ class VolatilityAgent:
         avg_forecast = forecast_series.mean() * 100
         max_forecast = forecast_series.max() * 100
         min_forecast = forecast_series.min() * 100
+        
+        # 使用DeepSeek API进行深度波动率预测分析
+        deepseek_analysis = self.market_analyzer.predict_volatility_with_deepseek(
+            token_symbol,
+            self.price_data,
+            self.volatility,
+            horizon
+        )
 
         result_text = f"""
 ## {token_symbol} 波动率预测结果
@@ -475,6 +483,10 @@ class VolatilityAgent:
 - {price_chart}
 - {volatility_chart}
 - {forecast_chart}
+
+## DeepSeek AI 波动率深度分析
+
+{deepseek_analysis}
 """
 
         response = Response(result_text)
